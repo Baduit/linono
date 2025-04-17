@@ -1,0 +1,5 @@
+[workspace]
+members = [
+	"linono_extractor",
+]
+resolver = "2"
