@@ -452,6 +452,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "linonono_debug_cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "colog",
+ "linono_extractor",
+]
+
+[[package]]
 name = "lock_api"
 version = "0.4.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"

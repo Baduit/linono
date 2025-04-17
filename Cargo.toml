@@ -1,5 +1,6 @@
 [workspace]
 members = [
 	"linono_extractor",
+	"linono_debug_cli",
 ]
 resolver = "2"
