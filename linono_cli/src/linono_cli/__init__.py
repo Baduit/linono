@@ -1,4 +1,5 @@
 import logging
+from rich.logging import RichHandler
 from linono_pyextractor import PyReleases
 
 class FilterAnnoyingLog(logging.Filter):
@@ -9,15 +10,9 @@ class FilterAnnoyingLog(logging.Filter):
 		"""
 		return record.name != "html5ever.tree_builder"
 
-FORMAT = '%(levelname)s %(name)s %(asctime)-15s %(filename)s:%(lineno)d %(message)s'
-
-handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter(FORMAT))
+handler = RichHandler()
 handler.addFilter(FilterAnnoyingLog())
-
-logger = logging.getLogger()
-logger.addHandler(handler)
-logger.setLevel(logging.INFO)
+logging.basicConfig(level=logging.INFO, format="%(message)s", datefmt="[%X]", handlers=[handler])
 
 def main():
 	print("Hello from python-cli!")
