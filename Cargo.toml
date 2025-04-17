@@ -2,5 +2,6 @@
 members = [
 	"linono_extractor",
 	"linono_debug_cli",
+	"linono_pyextractor",
 ]
 resolver = "2"
