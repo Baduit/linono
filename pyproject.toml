@@ -1,0 +1,12 @@
+[project]
+name = "linono_python"
+version = "0.1.0"
+
+[tool.rye.workspace]
+members = [
+	"linono_cli",
+	"linono_pyextractor",
+]
+
+[tool.rye]
+virtual = true

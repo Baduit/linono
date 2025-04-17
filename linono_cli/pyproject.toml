@@ -1,0 +1,29 @@
+[project]
+name = "linono_cli"
+version = "0.1.0"
+description = "Cli tool to get the release date of some light novel I like"
+authors = [
+    { name = "Lena Bertho", email = "23459846+Baduit@users.noreply.github.com" }
+]
+dependencies = [
+    "linono_pyextractor",
+]
+readme = "../README.md"
+requires-python = ">= 3.10"
+
+[project.scripts]
+"linono" = "linono_cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/linono_cli"]
