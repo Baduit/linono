@@ -1,5 +1,9 @@
 import logging
+
+from rich.console import Console
 from rich.logging import RichHandler
+from rich.table import Table
+
 from linono_pyextractor import PyReleases
 
 class FilterAnnoyingLog(logging.Filter):
@@ -10,21 +14,33 @@ class FilterAnnoyingLog(logging.Filter):
 		"""
 		return record.name != "html5ever.tree_builder"
 
-handler = RichHandler()
-handler.addFilter(FilterAnnoyingLog())
-logging.basicConfig(level=logging.INFO, format="%(message)s", datefmt="[%X]", handlers=[handler])
+def _all_releases_as_tables(releases: dict[str, list[PyReleases]]) -> list[Table]:
+	tables = []
+
+	for saga, release_list in releases.items():
+		table = Table(title=saga)
+		table.add_column("Title", justify="left")
+		table.add_column("Release Date", justify="left")
+		for release in release_list:
+			table.add_row(release.title, str(release.release_date) if release.release_date else "N/A")
+		tables.append(table)
+	return tables
 
 def main():
-	print("Hello from python-cli!")
-	try:
-		releases = PyReleases.load()
-		print("Coming releases:")
-		for c in releases.coming():
-			print(f"\t{c.saga} {c.title} {c.release_date}")
+	handler = RichHandler()
+	handler.addFilter(FilterAnnoyingLog())
+	logging.basicConfig(level=logging.WARNING, format="%(message)s", datefmt="[%X]", handlers=[handler])
 
-		print("All:")		
-		for saga, l in releases.all().items():
-			for c in l:
-				print(f"\t{c.saga} {c.title} {c.release_date}")
-	except RuntimeError as e:
-		print("Failed to load releases:", e)
+	releases = PyReleases.load()
+
+	console = Console()
+	for table in _all_releases_as_tables(releases.all()):
+		console.print(table)
+	
+	table = Table(title="Coming Releases")
+	table.add_column("Saga", justify="left")
+	table.add_column("Title", justify="left")
+	table.add_column("Release Date", justify="left")
+	for release in releases.coming():
+		table.add_row(release.saga, release.title, str(release.release_date) if release.release_date else "N/A")
+	console.print(table)
