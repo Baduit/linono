@@ -23,7 +23,7 @@ def _all_releases_as_tables(releases: dict[str, list[PyReleases]]) -> list[Table
 		table.add_column("Title", justify="left")
 		table.add_column("Release Date", justify="left")
 		for release in release_list:
-			table.add_row(release.title, str(release.release_date) if release.release_date else "N/A")
+			table.add_row(release.title, str(release.release_date) if release.release_date else "TBA")
 		tables.append(table)
 	return tables
 
@@ -46,7 +46,7 @@ def main():
 	table.add_column("Title", justify="left")
 	table.add_column("Release Date", justify="left")
 	for release in releases.coming():
-		table.add_row(release.saga, release.title, str(release.release_date) if release.release_date else "N/A")
+		table.add_row(release.saga, release.title, str(release.release_date) if release.release_date else "TBA")
 	console.print(table)
 
 	if generate_html:
