@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from rich.console import Console
 from rich.logging import RichHandler
@@ -27,13 +28,15 @@ def _all_releases_as_tables(releases: dict[str, list[PyReleases]]) -> list[Table
 	return tables
 
 def main():
+	generate_html = sys.argv[1] == "html" if len(sys.argv) > 1 else False
+
 	handler = RichHandler()
 	handler.addFilter(FilterAnnoyingLog())
 	logging.basicConfig(level=logging.WARNING, format="%(message)s", datefmt="[%X]", handlers=[handler])
 
 	releases = PyReleases.load()
 
-	console = Console()
+	console = Console(record=generate_html)
 	for table in _all_releases_as_tables(releases.all()):
 		console.print(table)
 	
@@ -44,3 +47,6 @@ def main():
 	for release in releases.coming():
 		table.add_row(release.saga, release.title, str(release.release_date) if release.release_date else "N/A")
 	console.print(table)
+
+	if generate_html:
+		console.save_html("linono_releases.html", inline_styles=True)
