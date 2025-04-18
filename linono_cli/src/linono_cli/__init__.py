@@ -29,6 +29,7 @@ def _all_releases_as_tables(releases: dict[str, list[PyReleases]]) -> list[Table
 
 def main():
 	generate_html = sys.argv[1] == "html" if len(sys.argv) > 1 else False
+	output_path = sys.argv[2] if len(sys.argv) > 2 else "index.html"
 
 	handler = RichHandler()
 	handler.addFilter(FilterAnnoyingLog())
@@ -49,4 +50,4 @@ def main():
 	console.print(table)
 
 	if generate_html:
-		console.save_html("linono_releases.html", inline_styles=True)
+		console.save_html(output_path, inline_styles=True)
