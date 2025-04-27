@@ -2,7 +2,7 @@ name: Deploy github page
 
 on:
   workflow_run:
-    workflows: [push-to-docker]
+    workflows: [Docker Image CI]
     types: [completed]
   schedule:
     - cron: "0 4 * * *" 
