@@ -31,10 +31,9 @@ jobs:
     steps:
       - name: Generate html
         run: |
-          pwd
           cd /linono
           mkdir build
-          rye run linono html build/index.html
+          linono html build/index.html
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -42,7 +41,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './build'
+          path: '/linono/build'
           
       - name: Deploy to GitHub Pages
         id: deployment

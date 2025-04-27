@@ -16,10 +16,12 @@ RUN apt install curl -y
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-# Install Rye
-RUN curl -sSf https://rye.astral.sh/get | RYE_INSTALL_OPTION="--yes" bash
-ENV PATH=/root/.rye/shims:$PATH
+# Install python
+RUN apt install python3 python3-pip python3.12-venv -y
 
-
-# Build
-RUN rye sync
+# Install linono in a venv
+ENV VIRTUAL_ENV=/linono/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN python3 -m pip install ./linono_pyextractor
+RUN python3 -m pip install ./linono_cli
