@@ -31,6 +31,8 @@ jobs:
     steps:
       - name: Generate html
         run: |
+          pwd
+          cd /linono
           mkdir build
           rye run linono html build/index.html
 
