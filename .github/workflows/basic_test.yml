@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Basic test
 
 on:
   pull_request:
