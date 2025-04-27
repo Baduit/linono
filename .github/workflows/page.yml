@@ -1,12 +1,13 @@
 name: Deploy github page
 
 on:
-    push:
-      branches: ["main"]
-    schedule:
-        - cron: "0 4 * * *" 
+  workflow_run:
+    workflows: [push-to-docker]
+    types: [completed]
+  schedule:
+    - cron: "0 4 * * *" 
   
-    workflow_dispatch:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -25,21 +26,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
+    container:
+      image: baduit/linono:latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install rustup
-        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -y | sh
-
-      - name: Install the latest version of rye
-        uses: eifinger/setup-rye@v4
-        with:
-          enable-cache: true
-  
-      - name: Sync dependencies
-        run: rye sync
-
       - name: Generate html
         run: |
           mkdir build
