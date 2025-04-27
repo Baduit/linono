@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      -
+        name: Build docker image
+        run: docker build . -t linono_test
+      -
+        name: Run linono in the docker image
+        run: docker run --rm --entrypoint bash linono_test -c "rye run linono"
