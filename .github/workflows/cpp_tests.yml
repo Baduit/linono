@@ -1,0 +1,29 @@
+name: Cpp tests
+
+on:
+  pull_request:
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      -
+        name: Install conan
+        run: pip install conan
+      -
+        name: Install conan deps
+        run: conan install . --build-missing
+      -
+        name: CMake prepare
+        run: cmake --preset conan-release
+      -
+        name: CMake build
+        run: cmake --build --preset conan-release
+      -
+        name: run tests
+        run: ctest --test-dir .\build\html_builder\
