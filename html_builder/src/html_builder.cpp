@@ -6,11 +6,20 @@
 namespace html_builder
 {
 
+std::string release_date_to_string(const std::optional<std::chrono::year_month_day>& release_date)
+{
+	if (release_date.has_value())
+		return std::format("{:%d/%m/%Y}", *release_date);
+	else
+		return "TBA"; // To be announced
+}
+
+
 struct ComingReleaseView
 {
 	static ComingReleaseView fromRelease(const Release& r)
 	{
-		return ComingReleaseView{.saga = r.saga, .title = r.title, .release_date = std::string("todo")};
+		return ComingReleaseView{.saga = r.saga, .title = r.title, .release_date = release_date_to_string(r.release_date)};
 	}
 
 	std::string_view saga;
@@ -23,7 +32,7 @@ struct SagaReleaseView
 {
 	static SagaReleaseView fromRelease(const Release& r)
 	{
-		return SagaReleaseView{.title = r.title, .release_date = std::string("todo")};
+		return SagaReleaseView{.title = r.title, .release_date = release_date_to_string(r.release_date)};
 	}
 
 	std::string_view title;
