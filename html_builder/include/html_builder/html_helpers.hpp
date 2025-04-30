@@ -49,8 +49,21 @@ std::string get_html_table_headers(const T& t)
 	return output;
 }
 
-template <std::ranges::forward_range R>
-std::string range_to_html_table(std::string_view title, const R& r)
+template<typename T>
+std::string add_row(const T& element)
+{
+	std::string output;
+	HtmlTagScope tr("tr", output);
+	boost::pfr::for_each_field(element,
+		[&output]<typename T>(const T& value) {
+			HtmlTagScope tr("td", output);
+			output += std::format("{}", value);
+	});
+	return output;
+}
+
+template <std::ranges::forward_range R, typename F>
+std::string range_to_html_table(std::string_view title, const R& r, F&& transform_function)
 {
 	if (std::ranges::empty(r))
 		return "";
@@ -60,16 +73,14 @@ std::string range_to_html_table(std::string_view title, const R& r)
 		HtmlTagScope tr("table", output);
 
 		output += std::format("<caption>{}</caption>", title);
-		output += get_html_table_headers(*std::ranges::cbegin(r));
 
-		for (const auto& element: r)
+		auto first_element = transform_function(*std::ranges::cbegin(r));
+		output += get_html_table_headers(first_element);
+		output += add_row(first_element);
+
+		for (const auto& element: r | std::views::drop(1) | std::views::transform(transform_function))
 		{
-			HtmlTagScope tr("tr", output);
-			boost::pfr::for_each_field(element,
-				[&output]<typename T>(const T& value) {
-					HtmlTagScope tr("td", output);
-					output += std::format("{}", value);
-			});
+			output += add_row(element);
 		}
 	}
 	return output;

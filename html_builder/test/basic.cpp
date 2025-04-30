@@ -1,9 +1,9 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest/doctest.h>
 
-#include <iostream>
-
 #include <html_builder/html_helpers.hpp>
+#include <html_builder/Releases.hpp>
+#include <html_builder/html_builder.hpp>
 
 struct Toto
 {
@@ -11,7 +11,7 @@ struct Toto
 	int b;
 };
 
-TEST_CASE("basic")
+TEST_CASE("html helpers")
 {
 	Toto toto {.a = 5, .b = 7};
 	{
@@ -21,9 +21,61 @@ TEST_CASE("basic")
 	}
 
 	{
-		std::string tmp = html_builder::range_to_html_table("my title", std::array{toto});
-		std::cout << tmp << std::endl;
+		std::string tmp = html_builder::range_to_html_table("my title", std::array{toto}, [](const Toto& t){ return t; });
 		std::string_view expected = "<table><caption>my title</caption><tr><th>a</th><th>b</th></tr><tr><td>5</td><td>7</td></tr></table>";
 		REQUIRE(tmp == expected);
 	}
+}
+
+TEST_CASE("coming_releases_to_html")
+{
+	using namespace std::literals::chrono_literals;
+	namespace c = std::chrono;
+
+	html_builder::Release a {.saga = "lol", .title = "tome 1", .release_date = 06d / c::September / 1996y};
+	html_builder::Release b {.saga = "lol", .title = "tome 2", .release_date = {}};
+
+	{
+		std::string tmp = html_builder::coming_releases_to_html({});
+		std::string_view expected = "";
+		REQUIRE(tmp == expected);
+	}
+
+	{
+		std::string tmp = html_builder::coming_releases_to_html({a, b});
+		std::string_view expected = "<table><caption>Coming Releases</caption><tr><th>saga</th><th>title</th><th>release_date</th></tr><tr><td>lol</td><td>tome 1</td><td>todo</td></tr><tr><td>lol</td><td>tome 2</td><td>todo</td></tr></table>";
+		REQUIRE(tmp == expected);
+	}
+}
+
+TEST_CASE("saga_releases_to_html")
+{
+	using namespace std::literals::chrono_literals;
+	namespace c = std::chrono;
+
+	html_builder::Release a {.saga = "lol", .title = "tome 1", .release_date = 06d / c::September / 1996y};
+	html_builder::Release b {.saga = "lol", .title = "tome 2", .release_date = {}};
+
+	{
+		std::string tmp = html_builder::saga_releases_to_html("lol", {});
+		std::string_view expected = "";
+		REQUIRE(tmp == expected);
+	}
+
+	{
+		std::string tmp = html_builder::saga_releases_to_html("lol", {a, b});
+		std::string_view expected = "<table><caption>lol</caption><tr><th>title</th><th>release_date</th></tr><tr><td>tome 1</td><td>todo</td></tr><tr><td>tome 2</td><td>todo</td></tr></table>";
+		REQUIRE(tmp == expected);
+	}
+}
+
+TEST_CASE("releases_to_html")
+{
+	using namespace std::literals::chrono_literals;
+	namespace c = std::chrono;
+
+	html_builder::Release a {.saga = "lol", .title = "tome 1", .release_date = 06d / c::September / 1996y};
+	html_builder::Release b {.saga = "lol", .title = "tome 2", .release_date = {}};
+	html_builder::Releases releases {.all = {{"lol", {a, b}}}, .coming = {b}};
+	// todo
 }
