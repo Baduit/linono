@@ -17,4 +17,4 @@ jobs:
         run: docker build . -t linono_test
       -
         name: Run linono in the docker image
-        run: docker run --rm --entrypoint bash linono_test -c "rye run linono"
+        run: docker run --rm --entrypoint bash linono_test -c "linono"
