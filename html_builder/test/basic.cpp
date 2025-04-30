@@ -43,7 +43,7 @@ TEST_CASE("coming_releases_to_html")
 
 	{
 		std::string tmp = html_builder::coming_releases_to_html({a, b});
-		std::string_view expected = "<table><caption>Coming Releases</caption><tr><th>Saga</th><th>Title</th><th>Release date</th></tr><tr><td>lol</td><td>tome 1</td><td>06/09/1996</td></tr><tr><td>lol</td><td>tome 2</td><td>TBA</td></tr></table>";
+		std::string_view expected = "<table><tr><th>Saga</th><th>Title</th><th>Release date</th></tr><tr><td>lol</td><td>tome 1</td><td>06/09/1996</td></tr><tr><td>lol</td><td>tome 2</td><td>TBA</td></tr></table>";
 		REQUIRE(tmp == expected);
 	}
 }
@@ -77,5 +77,10 @@ TEST_CASE("releases_to_html")
 	html_builder::Release a {.saga = "lol", .title = "tome 1", .release_date = 06d / c::September / 1996y};
 	html_builder::Release b {.saga = "lol", .title = "tome 2", .release_date = {}};
 	html_builder::Releases releases {.all = {{"lol", {a, b}}}, .coming = {b}};
-	// todo
+
+	std::string tmp = html_builder::releases_to_html(releases);
+	std::string coming = "<h2>Coming releases</h2><table><tr><th>Saga</th><th>Title</th><th>Release date</th></tr><tr><td>lol</td><td>tome 2</td><td>TBA</td></tr></table>";
+	std::string lol_saga = "<h2>All sagas</h2><table><caption>lol</caption><tr><th>Title</th><th>Release date</th></tr><tr><td>tome 1</td><td>06/09/1996</td></tr><tr><td>tome 2</td><td>TBA</td></tr></table>";
+	std::string expected = coming + lol_saga;
+	REQUIRE(tmp == expected);
 }

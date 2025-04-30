@@ -88,7 +88,8 @@ std::string range_to_html_table(std::string_view title, const R& r, F&& transfor
 	{
 		HtmlTagScope tr("table", output);
 
-		output += std::format("<caption>{}</caption>", title);
+		if (title != "")
+			output += std::format("<caption>{}</caption>", title);
 
 		auto first_element = transform_function(*std::ranges::cbegin(r));
 		output += get_html_table_headers(first_element);
