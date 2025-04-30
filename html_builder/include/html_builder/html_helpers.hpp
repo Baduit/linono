@@ -1,9 +1,11 @@
 #pragma once
 
+#include <algorithm>
 #include <string>
 #include <format>
 #include <ranges>
 #include <string_view>
+#include <cctype>
 
 #include <boost/pfr/core.hpp>
 #include <boost/pfr/core_name.hpp>
@@ -34,6 +36,20 @@ struct HtmlTagScope
 };
 
 
+inline std::string format_header(std::string_view header)
+{
+	std::string output = std::string(header);
+	output.reserve(header.size());
+	// Casts needed because https://en.cppreference.com/w/cpp/string/byte/toupper
+	output[0] = static_cast<char>(std::toupper(static_cast<unsigned char>(output[0])));
+	std::transform(output.begin(), output.end(), output.begin(),
+		[](char c)
+		{
+			return c == '_' ? ' ' : c;
+		});
+	return output;
+}
+
 template <typename T>
 std::string get_html_table_headers(const T& t)
 {
@@ -43,7 +59,7 @@ std::string get_html_table_headers(const T& t)
 		boost::pfr::for_each_field_with_name(t,
 			[&output](std::string_view name, const auto&) {
 				HtmlTagScope tr("th", output);
-				output += name;
+				output += format_header(name);
 		});
 	}
 	return output;

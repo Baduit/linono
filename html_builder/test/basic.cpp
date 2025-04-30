@@ -16,13 +16,13 @@ TEST_CASE("html helpers")
 	Toto toto {.a = 5, .b = 7};
 	{
 		std::string tmp = html_builder::get_html_table_headers(toto);
-		std::string_view expected = "<tr><th>a</th><th>b</th></tr>";
+		std::string_view expected = "<tr><th>A</th><th>B</th></tr>";
 		REQUIRE(tmp == expected);
 	}
 
 	{
 		std::string tmp = html_builder::range_to_html_table("my title", std::array{toto}, [](const Toto& t){ return t; });
-		std::string_view expected = "<table><caption>my title</caption><tr><th>a</th><th>b</th></tr><tr><td>5</td><td>7</td></tr></table>";
+		std::string_view expected = "<table><caption>my title</caption><tr><th>A</th><th>B</th></tr><tr><td>5</td><td>7</td></tr></table>";
 		REQUIRE(tmp == expected);
 	}
 }
@@ -43,7 +43,7 @@ TEST_CASE("coming_releases_to_html")
 
 	{
 		std::string tmp = html_builder::coming_releases_to_html({a, b});
-		std::string_view expected = "<table><caption>Coming Releases</caption><tr><th>saga</th><th>title</th><th>release_date</th></tr><tr><td>lol</td><td>tome 1</td><td>06/09/1996</td></tr><tr><td>lol</td><td>tome 2</td><td>TBA</td></tr></table>";
+		std::string_view expected = "<table><caption>Coming Releases</caption><tr><th>Saga</th><th>Title</th><th>Release date</th></tr><tr><td>lol</td><td>tome 1</td><td>06/09/1996</td></tr><tr><td>lol</td><td>tome 2</td><td>TBA</td></tr></table>";
 		REQUIRE(tmp == expected);
 	}
 }
@@ -64,7 +64,7 @@ TEST_CASE("saga_releases_to_html")
 
 	{
 		std::string tmp = html_builder::saga_releases_to_html("lol", {a, b});
-		std::string_view expected = "<table><caption>lol</caption><tr><th>title</th><th>release_date</th></tr><tr><td>tome 1</td><td>06/09/1996</td></tr><tr><td>tome 2</td><td>TBA</td></tr></table>";
+		std::string_view expected = "<table><caption>lol</caption><tr><th>Title</th><th>Release date</th></tr><tr><td>tome 1</td><td>06/09/1996</td></tr><tr><td>tome 2</td><td>TBA</td></tr></table>";
 		REQUIRE(tmp == expected);
 	}
 }
