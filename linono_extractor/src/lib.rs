@@ -101,6 +101,7 @@ impl Releases {
 		res.get_level99_releases()?;
 		res.get_go_down_in_history_releases()?;
 		res.get_apothecary_diaries_releases()?;
+		res.get_next_life_as_vilainess_doom_releases()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -167,6 +168,22 @@ impl Releases {
 		let saga = "The Apothecary Diaries - Light Novel";
 
 		let contents: String = get_content("https://en.wikipedia.org/wiki/List_of_The_Apothecary_Diaries_volumes")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
+
+	fn get_next_life_as_vilainess_doom_releases(&mut self) -> Result<()>{
+		let saga = "My Next Life as a Villainess: All Routes Lead to Doom! - Light Novel";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/My_Next_Life_as_a_Villainess:_All_Routes_Lead_to_Doom!")?;
 		let all_releases = get_releases_from_html(
 			saga,
 			contents.as_str(),
