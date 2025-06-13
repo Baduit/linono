@@ -57,10 +57,10 @@ fn get_releases_from_html(saga: &str, html_content: &str, line_selector: &Select
 			Some(release_date_col) => release_date_col,
 			None => bail!("Release column not found in table."),
 		};
-		let release_date = get_text(&release_date_col)?.trim().to_string();
+		let release_date = get_text(&release_date_col)?.to_string().replace("(e-book)", "");
 		info!("Volume: {}: release date: {}", volume, release_date);
 
-		let release_date = match NaiveDate::parse_from_str(release_date.as_str(), "%B %d, %Y") {
+		let release_date = match NaiveDate::parse_from_str(release_date.as_str().trim(), "%B %d, %Y") {
 			Ok(date) => Some(date),
 			Err(_) => None,
 		};
