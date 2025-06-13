@@ -100,6 +100,7 @@ impl Releases {
 		res.get_slime_releases()?;
 		res.get_level99_releases()?;
 		res.get_go_down_in_history_releases()?;
+		res.get_apothecary_diaries_releases()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -150,6 +151,22 @@ impl Releases {
 		let saga = "I'll Become a Villainess Who Goes Down in History - Light Novel";
 
 		let contents: String = get_content("https://en.wikipedia.org/wiki/I'll_Become_a_Villainess_Who_Goes_Down_in_History")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
+
+	fn get_apothecary_diaries_releases(&mut self) -> Result<()>{
+		let saga = "The Apothecary Diaries - Light Novel";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/List_of_The_Apothecary_Diaries_volumes")?;
 		let all_releases = get_releases_from_html(
 			saga,
 			contents.as_str(),
