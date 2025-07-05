@@ -106,6 +106,7 @@ impl Releases {
 		res.get_apothecary_diaries_releases()?;
 		res.get_next_life_as_vilainess_doom_releases()?;
 		res.get_bookworm_hannelor()?;
+		res.get_secrets_of_the_silent_witch()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -215,6 +216,22 @@ impl Releases {
 
 		Ok(())
 	}
+
+	fn get_secrets_of_the_silent_witch(&mut self) -> Result<()>{
+		let saga = "Secrets of the Silent Witch";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/Secrets_of_the_Silent_Witch")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
 }
 
 #[cfg(test)]
@@ -248,6 +265,10 @@ mod tests {
 		let release = all_releases.get("Ascendance of a Bookworm - Hannelore's Fifth Year at the Royal Academy").unwrap().get(0).unwrap();
 		assert_eq!(release.title, "34");
 		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 05, 23));
+
+		let release = all_releases.get("Secrets of the Silent Witch").unwrap().get(7).unwrap();
+		assert_eq!(release.title, "7");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 11, 11));
     }
 
 }
