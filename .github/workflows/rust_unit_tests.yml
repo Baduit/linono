@@ -1,0 +1,29 @@
+name: Rust unit tests
+
+on:
+  pull_request:
+    paths:
+      - '**.rs'
+
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      -
+        name: Install rustup
+        run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs -y | sh
+        
+      -
+        name: Build native build for tests
+        run: cargo build
+
+      -
+        name: Unit tests
+        run: cargo test
