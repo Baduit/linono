@@ -197,3 +197,33 @@ impl Releases {
 	}
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load() {
+        let all_releases = Releases::load().unwrap().all;
+
+		let release = all_releases.get("That Time I Got Reincarnated as a Slime - Light Novel").unwrap().get(22).unwrap();
+		assert_eq!(release.title, "21");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 07, 08));
+
+		let release = all_releases.get("Villainess_Level_99 - Light Novel").unwrap().get(5).unwrap();
+		assert_eq!(release.title, "6");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2024, 07, 31));
+
+		let release = all_releases.get("I'll Become a Villainess Who Goes Down in History - Light Novel").unwrap().get(1).unwrap();
+		assert_eq!(release.title, "2");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 06, 10));
+
+		let release = all_releases.get("The Apothecary Diaries - Light Novel").unwrap().get(14).unwrap();
+		assert_eq!(release.title, "15");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 09, 12));
+
+		let release = all_releases.get("My Next Life as a Villainess: All Routes Lead to Doom! - Light Novel").unwrap().get(13).unwrap();
+		assert_eq!(release.title, "14");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 06, 04));
+    }
+
+}
