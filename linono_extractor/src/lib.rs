@@ -57,7 +57,10 @@ fn get_releases_from_html(saga: &str, html_content: &str, line_selector: &Select
 			Some(release_date_col) => release_date_col,
 			None => bail!("Release column not found in table."),
 		};
-		let release_date = get_text(&release_date_col)?.to_string().replace("(e-book)", "");
+		let release_date = get_text(&release_date_col)?
+			.to_string()
+			.replace("(e-book)", "")
+			.replace("(Digital)", "");
 		info!("Volume: {}: release date: {}", volume, release_date);
 
 		let release_date = match NaiveDate::parse_from_str(release_date.as_str().trim(), "%B %d, %Y") {
@@ -102,6 +105,7 @@ impl Releases {
 		res.get_go_down_in_history_releases()?;
 		res.get_apothecary_diaries_releases()?;
 		res.get_next_life_as_vilainess_doom_releases()?;
+		res.get_bookworm_hannelor()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -195,6 +199,22 @@ impl Releases {
 
 		Ok(())
 	}
+
+	fn get_bookworm_hannelor(&mut self) -> Result<()>{
+		let saga = "Ascendance of a Bookworm - Hannelore's Fifth Year at the Royal Academy";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/List_of_Ascendance_of_a_Bookworm_light_novels")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(3) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
 }
 
 #[cfg(test)]
@@ -224,6 +244,10 @@ mod tests {
 		let release = all_releases.get("My Next Life as a Villainess: All Routes Lead to Doom! - Light Novel").unwrap().get(13).unwrap();
 		assert_eq!(release.title, "14");
 		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 06, 04));
+
+		let release = all_releases.get("Ascendance of a Bookworm - Hannelore's Fifth Year at the Royal Academy").unwrap().get(0).unwrap();
+		assert_eq!(release.title, "34");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 05, 23));
     }
 
 }
