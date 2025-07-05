@@ -107,6 +107,7 @@ impl Releases {
 		res.get_next_life_as_vilainess_doom_releases()?;
 		res.get_bookworm_hannelor()?;
 		res.get_secrets_of_the_silent_witch()?;
+		res.get_executioner()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -232,6 +233,22 @@ impl Releases {
 
 		Ok(())
 	}
+
+	fn get_executioner(&mut self) -> Result<()>{
+		let saga = "The Executioner and Her Way of Life";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/The_Executioner_and_Her_Way_of_Life")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
 }
 
 #[cfg(test)]
@@ -269,6 +286,10 @@ mod tests {
 		let release = all_releases.get("Secrets of the Silent Witch").unwrap().get(7).unwrap();
 		assert_eq!(release.title, "7");
 		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 11, 11));
+
+		let release = all_releases.get("The Executioner and Her Way of Life").unwrap().get(8).unwrap();
+		assert_eq!(release.title, "9");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 08, 12));
     }
 
 }
