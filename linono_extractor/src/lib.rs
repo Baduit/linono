@@ -108,6 +108,7 @@ impl Releases {
 		res.get_bookworm_hannelor()?;
 		res.get_secrets_of_the_silent_witch()?;
 		res.get_executioner()?;
+		res.get_magical_revolution_princess_genius()?;
 
 		res.coming.sort_by(|a, b| {
 			match (a.release_date, b.release_date) {
@@ -249,6 +250,22 @@ impl Releases {
 
 		Ok(())
 	}
+
+	fn get_magical_revolution_princess_genius(&mut self) -> Result<()>{
+		let saga = "The Magical Revolution of the Reincarnated Princess and the Genius Young Lady";
+
+		let contents: String = get_content("https://en.wikipedia.org/wiki/The_Magical_Revolution_of_the_Reincarnated_Princess_and_the_Genius_Young_Lady")?;
+		let all_releases = get_releases_from_html(
+			saga,
+			contents.as_str(),
+			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+		)?;
+
+		add_coming_releases(&all_releases,&mut self.coming);
+		self.all.insert(saga.to_string(), all_releases);
+
+		Ok(())
+	}
 }
 
 #[cfg(test)]
@@ -290,6 +307,10 @@ mod tests {
 		let release = all_releases.get("The Executioner and Her Way of Life").unwrap().get(8).unwrap();
 		assert_eq!(release.title, "9");
 		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 08, 12));
+
+		let release = all_releases.get("The Magical Revolution of the Reincarnated Princess and the Genius Young Lady").unwrap().get(7).unwrap();
+		assert_eq!(release.title, "8");
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2024, 11, 26));
     }
 
 }
