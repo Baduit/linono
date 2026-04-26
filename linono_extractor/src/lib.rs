@@ -319,7 +319,7 @@ mod tests {
 
 		let release = all_releases.get("Secrets of the Silent Witch").unwrap().get(7).unwrap();
 		assert_eq!(release.title, "7");
-		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 11, 11));
+		assert_eq!(release.release_date, NaiveDate::from_ymd_opt(2025, 12, 02));
 
 		let release = all_releases.get("The Executioner and Her Way of Life").unwrap().get(8).unwrap();
 		assert_eq!(release.title, "9");
