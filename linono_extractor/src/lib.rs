@@ -131,7 +131,7 @@ impl Releases {
 		let all_releases = get_releases_from_html(
 			saga,
 			contents.as_str(),
-			&Selector::parse("#mf-section-1 tr:has(>th):has(>td)").unwrap(),
+			&Selector::parse(".wikitable:nth-of-type(1) tr:has(>th):has(>td)").unwrap(),
 		)?;
 
 		add_coming_releases(&all_releases, &mut self.coming);
