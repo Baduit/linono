@@ -255,11 +255,11 @@ impl Releases {
 	fn get_magical_revolution_princess_genius(&mut self) -> Result<()>{
 		let saga = "The Magical Revolution of the Reincarnated Princess and the Genius Young Lady";
 
-		let contents: String = get_content("https://en.wikipedia.org/wiki/The_Magical_Revolution_of_the_Reincarnated_Princess_and_the_Genius_Young_Lady")?;
+		let contents: String = get_content("https://en.wikipedia.org/wiki/List_of_The_Magical_Revolution_of_the_Reincarnated_Princess_and_the_Genius_Young_Lady_volumes")?;
 		let all_releases = get_releases_from_html(
 			saga,
 			contents.as_str(),
-			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+			&Selector::parse(".wikitable:nth-of-type(1) tr:has(>th):has(>td)").unwrap(),
 		)?;
 
 		add_coming_releases(&all_releases,&mut self.coming);
