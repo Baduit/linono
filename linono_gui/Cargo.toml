@@ -1,0 +1,16 @@
+[package]
+name = "linono_gui"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+
+[dependencies]
+linono_extractor = { "path" = "../linono_extractor"}
+eframe = { version = "*", features = [
+  "default",
+  "__screenshot", # __screenshot is so we can dump a screenshot using EFRAME_SCREENSHOT_TO
+] }
+
+env_logger = { version = "*", features = ["auto-color", "humantime"] }
