@@ -239,11 +239,11 @@ impl Releases {
 	fn get_executioner(&mut self) -> Result<()>{
 		let saga = "The Executioner and Her Way of Life";
 
-		let contents: String = get_content("https://en.wikipedia.org/wiki/The_Executioner_and_Her_Way_of_Life")?;
+		let contents: String = get_content("https://en.wikipedia.org/wiki/List_of_The_Executioner_and_Her_Way_of_Life_volumes")?;
 		let all_releases = get_releases_from_html(
 			saga,
 			contents.as_str(),
-			&Selector::parse(".wikitable:nth-of-type(2) tr:has(>th):has(>td)").unwrap(),
+			&Selector::parse(".wikitable:nth-of-type(1) tr:has(>th):has(>td)").unwrap(),
 		)?;
 
 		add_coming_releases(&all_releases,&mut self.coming);
